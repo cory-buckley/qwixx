@@ -1,0 +1,117 @@
+body {
+	margin: 0;
+	padding: 0;
+	width: 100vw;
+	height: 100vh;
+	position:fixed;
+	user-select: none;
+}
+
+.quixx-sheet-container {
+	position: absolute;
+	display: block;
+	aspect-ratio: 1.92150706436;
+	width: 100%;
+	height: 100%;
+	top: 50%;
+	transform: translateY(-50%);
+	background: #FCFCFC;
+	background: linear-gradient(to bottom,  #FCFCFC 10%,#EFEFEF 90%);
+}
+
+#resetModal {
+	position: fixed;
+	display: flex;
+  	flex-direction: column;
+ 	justify-content: center;
+	width: 100vw;
+	height: 100vh;
+	color: #FFFFFF;
+	background: grey;
+	visibility: hidden;
+}
+
+.modal-contents {
+	text-align: center;
+	font-family: Helvetica, sans-serif;
+	font-size: 20pt;
+}
+
+button {
+	margin-top:  10vh;
+	width: 10vw;
+	height: 5vw;
+}
+
+/* SVG Styles */
+
+#ROWA { fill: #f34c62; }
+#ROWB { fill: #f8b453; }
+#ROWC { fill: #22d236; }
+#ROWD { fill: #3d6cc5; }
+
+#PENALTY {
+	opacity: 0.3;
+	fill: #97999C;
+}
+
+#CXTOTAL {
+	opacity: 0.75;
+	fill-rule: evenodd;
+	clip-rule: evenodd;
+	fill: #FFFFFF;
+}
+
+#TITLE, #CTOTAL, #SCORETEXTTOTAL {
+	transform-origin: center;
+	transform-box: fill-box;
+}
+
+#SCORES, #TOTALSCORECOPY, #SCORETEXTTOTAL {
+	fill: #272727;
+}
+
+.BUTTON {
+	opacity: 0.5;
+}
+
+.ICON {
+	fill:  #FFFFFF;
+	opacity: 0.9;
+}
+
+.OVERLAY {
+	opacity: 0.75;
+	fill: #FFFFFF;
+}
+
+.LINE {
+	fill: none;
+	stroke: #000000;
+	stroke-width: 2;
+	stroke-linecap: round;
+	stroke-miterlimit: 10;
+}
+
+.LOCKAREA { fill: transparent; }
+.LOCKCONNECTOR {
+	opacity: 0.35; 
+	fill: #FFFFFF;
+	mix-blend-mode: screen;
+}
+
+.TEXT { font-family: 'Waiting for the Sunrise', cursive; }
+.SMALLTEXT { font-size: 74px; }
+.LARGETEXT { font-size: 91px; }
+
+.NUMBERA, .NUMBERB, .NUMBERC, .NUMBERD, .CROSS, .CALOCK1, .CALOCK2, .CBLOCK1, .CBLOCK2, .CCLOCK1, .CCLOCK2, .CDLOCK1, .CDLOCK2, .LOCKCONNECTOR, .ROWARROW, .ICON {
+	pointer-events: none;
+}
+
+.CROSS {
+	fill: #272727;
+}
+
+:root {
+  --animate-delay: 0.5s;
+}
