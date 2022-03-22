@@ -51,27 +51,33 @@ var lockedA = JSON.parse(localStorage.getItem('lockedA')) || false,
   lockedC = JSON.parse(localStorage.getItem('lockedC')) || false,
   lockedD = JSON.parse(localStorage.getItem('lockedD')) || false;
 
-var modalVisible = false;
+var ouchAudio = new Audio('audio/ouch.mp3');
+var crossAudio = new Audio('audio/cross.wav');
+var eraseAudio = new Audio('audio/erase.wav');
+var rejectAudio = new Audio('audio/reject.wav');
+var wipeAudio = new Audio('audio/wipe.wav');
+var lockAudio = new Audio('audio/lock.wav');
+ouchAudio.playbackRate = 1.75;
 
-document.getElementById('resetModal').addEventListener('animationend', function() {
-  document.getElementById('resetModal').classList.remove('animate__animated', 'animate__slideOutDown', 'animate__slideInUp', 'animate__faster');
-  if(!modalVisible) {
-    document.getElementById('resetModal').style.visibility = 'hidden';
-  }
-});
-
-function showModal(modalId) {
-  document.getElementById(modalId).style.visibility = 'visible';
-  document.getElementById(modalId).classList.add('animate__animated', 'animate__slideInUp', 'animate__faster');
-  modalVisible = true;
-}
-
-function hideModal(modalId) {
-  document.getElementById(modalId).classList.add('animate__animated', 'animate__slideOutDown', 'animate__faster');
-  modalVisible = false;
+function resetAudio() {
+  ouchAudio.pause();
+  crossAudio.pause();
+  eraseAudio.pause();
+  lockAudio.pause();
+  rejectAudio.pause();
+  wipeAudio.pause();
+  ouchAudio.currentTime = 0;
+  crossAudio.currentTime = 0;
+  eraseAudio.currentTime = 0;
+  lockAudio.currentTime = 0;
+  rejectAudio.currentTime = 0;
+  wipeAudio.currentTime = 0;
 }
 
 function resetSheet() {
+  fadeModalContent('resetModal');
+  resetAudio();
+  wipeAudio.play();
   // cell value storage for each row
   rowAValues = new Array(11).fill(false);
   rowBValues = new Array(11).fill(false);
@@ -81,7 +87,9 @@ function resetSheet() {
   // the locked status for each row
   lockedA = false, lockedB = false, lockedC = false, lockedD = false;
   updateSheet();
-  hideModal('resetModal');
+  setTimeout(function() {
+    hideModal('resetModal');
+  }, 1000);
 }
 
 function saveCurrentState() {
@@ -94,14 +102,6 @@ function saveCurrentState() {
   localStorage.setItem('lockedB', JSON.stringify(lockedB));
   localStorage.setItem('lockedC', JSON.stringify(lockedC));
   localStorage.setItem('lockedD', JSON.stringify(lockedD));
-}
-
-document.getElementById('LOCKCOPY').addEventListener('animationend', function() {
-  document.getElementById('LOCKCOPY').classList.remove('animate__animated', 'animate__headShake');
-});
-
-function shakeLockCopy() {
-  document.getElementById('LOCKCOPY').classList.add('animate__animated', 'animate__headShake');
 }
 
 function rowHasCrossesAhead(row, startingNum) {
@@ -192,6 +192,8 @@ function canBeCrossed(cell) {
     }
     if(crossCount.length < 5) {
       shakeLockCopy();
+      resetAudio();
+      rejectAudio.play();
       return false;
     }
   }
@@ -206,18 +208,51 @@ function canBeCrossed(cell) {
   }
 }
 
+function crossCellPlayAudio(rowValues, num) {
+  resetAudio();
+  if (rowValues[num-2]) {
+    if (num == 12) {
+      startConfetti();
+      lockAudio.play();
+      setTimeout(function() {
+        stopConfetti();
+      }, 1000);
+    }
+    else {
+      crossAudio.play();
+    }
+  }
+  else {
+    eraseAudio.play();
+  }
+}
+
 function crossCell(cell) {
   var row = cell[1];
   var num = parseInt(cell.substring(2));
+  
   switch(row) {
-    case 'A': rowAValues[num-2] = !rowAValues[num-2]; break;
-    case 'B': rowBValues[num-2] = !rowBValues[num-2]; break;
-    case 'C': rowCValues[num-2] = !rowCValues[num-2]; break;
-    case 'D': rowDValues[num-2] = !rowDValues[num-2]; break;
+    case 'A':
+      rowAValues[num-2] = !rowAValues[num-2];
+      crossCellPlayAudio(rowAValues, num);
+      break;
+    case 'B':
+      rowBValues[num-2] = !rowBValues[num-2];
+      crossCellPlayAudio(rowBValues, num);
+      break;
+    case 'C':
+      rowCValues[num-2] = !rowCValues[num-2];
+      crossCellPlayAudio(rowCValues, num);
+      break;
+    case 'D':
+      rowDValues[num-2] = !rowDValues[num-2];
+      crossCellPlayAudio(rowDValues, num);
+      break;
     default:
       console.log('ERROR: Could not find a row to check values');
       break;
   }
+  jiggleScore('SCORETEXT'+row);
   if(num == 12) {
     toggleRowLock(row);
   }
@@ -228,12 +263,21 @@ function processClick(cell) {
   if(canBeCrossed(cell)) {
     crossCell(cell);
     updateSheet();
+    jiggleScore('SCORETEXTTOTAL');
   }
 }
 
 function processPenalty(cellNum) {
   rowPValues[cellNum] = !rowPValues[cellNum];
+  resetAudio();
+  if(rowPValues[cellNum]) {
+    ouchAudio.play();
+  }
+  else {
+    eraseAudio.play();
+  }
   updateSheet();
+  jiggleScore('SCORETEXTP');
 }
 
 function updateRowText(rowValues, row) {
@@ -275,7 +319,16 @@ function updateTextElements() {
   }
 
   var totalScore = rowATotal + rowBTotal + rowCTotal + rowDTotal - (penaltyCount.length * 5);
-  document.getElementById('SCORETEXTTOTAL').textContent = totalScore ? totalScore : ''; 
+  var totalScoreElem = document.getElementById('SCORETEXTTOTAL');
+  if (totalScore > 0) {
+    totalScoreElem.textContent = totalScore;
+  }
+  else if (rowATotal == 0 && rowBTotal == 0 && rowCTotal == 0 && rowDTotal == 0) {
+    totalScoreElem.textContent = '';
+  }
+  else {
+    totalScoreElem.textContent = 'sad';
+  }
 }
 
 function updateRow(rowValues, locked, row) {
@@ -362,6 +415,7 @@ function updateSheet() {
 // ROW A
 document.getElementById('ROWA').style.fill = colorA.toString();
 document.getElementById('TITLEQ').style.fill = colorA.toString();
+document.getElementById('LAUNCHQ').style.fill = colorA.toString();
 var numbers = document.getElementsByClassName('NUMBERA');
 Array.from(numbers).forEach(function(num) {
   num.style.fill = colorA.toString();
@@ -372,10 +426,12 @@ for(var i = 2; i < 13; i++) {
   document.getElementById('XA' + i).style.fill = numColorA.toString();
 }
 document.getElementById('XALOCK').style.fill = numColorA.toString();
+document.getElementById('LOCKCONNECTORA').style.fill = numColorA.toString();
 
 // ROW B
 document.getElementById('ROWB').style.fill = colorB.toString();
 document.getElementById('TITLEW').style.fill = colorB.toString();
+document.getElementById('LAUNCHW').style.fill = colorB.toString();
 numbers = document.getElementsByClassName('NUMBERB');
 Array.from(numbers).forEach(function(num) {
   num.style.fill = colorB.toString();
@@ -387,9 +443,11 @@ for(var i = 2; i < 13; i++) {
   document.getElementById('XB' + i).style.fill = numColorB.toString();
 }
 document.getElementById('XBLOCK').style.fill = numColorB.toString();
+document.getElementById('LOCKCONNECTORB').style.fill = numColorB.toString();
 
 // GREY STUFF
 document.getElementById('TITLEI').style.fill = "#bdc5cc";
+document.getElementById('LAUNCHI').style.fill = "#bdc5cc";
 document.getElementById('SCORETEXTP').style.opacity = 0.6;
 document.getElementById('XTEXTP').style.opacity = 0.6;
 document.getElementById('MINUSP').style.opacity = 0.6;
@@ -397,6 +455,7 @@ document.getElementById('MINUSP').style.opacity = 0.6;
 // ROW C
 document.getElementById('ROWC').style.fill = colorC.toString();
 document.getElementById('TITLEX1').style.fill = colorC.toString();
+document.getElementById('LAUNCHX1').style.fill = colorC.toString();
 numbers = document.getElementsByClassName('NUMBERC');
 Array.from(numbers).forEach(function(num) {
   num.style.fill = colorC.toString();
@@ -408,10 +467,12 @@ for(var i = 2; i < 13; i++) {
   document.getElementById('XC' + i).style.fill = numColorC.toString();
 }
 document.getElementById('XCLOCK').style.fill = numColorC.toString();
+document.getElementById('LOCKCONNECTORC').style.fill = numColorC.toString();
 
 // ROW D
 document.getElementById('ROWD').style.fill = colorD.toString();
 document.getElementById('TITLEX2').style.fill = colorD.toString();
+document.getElementById('LAUNCHX2').style.fill = colorD.toString();
 numbers = document.getElementsByClassName('NUMBERD');
 Array.from(numbers).forEach(function(num) {
   num.style.fill = colorD.toString();
@@ -423,6 +484,7 @@ for(var i = 2; i < 13; i++) {
   document.getElementById('XD' + i).style.fill = numColorD.toString();
 }
 document.getElementById('XDLOCK').style.fill = numColorD.toString();
+document.getElementById('LOCKCONNECTORD').style.fill = numColorD.toString();
 
 // hide all crosses to start
 var crosses = document.getElementById('CROSSES').children;
@@ -535,6 +597,7 @@ var targetLock = document.getElementById('LAA');
 targetLock.addEventListener('click', function() {
   toggleRowLock('A');
   if (!lockedA && rowAValues[rowAValues.length-1]) {
+    eraseAudio.play();
     rowAValues[rowAValues.length-1] = false;
   }
   updateSheet();
@@ -543,6 +606,7 @@ var targetLock = document.getElementById('LAB');
 targetLock.addEventListener('click', function() {
   toggleRowLock('B');
   if (!lockedB && rowBValues[rowBValues.length-1]) {
+    eraseAudio.play();
     rowBValues[rowBValues.length-1] = false;
   }
   updateSheet();
@@ -551,6 +615,7 @@ var targetLock = document.getElementById('LAC');
 targetLock.addEventListener('click', function() {
   toggleRowLock('C');
   if (!lockedC && rowCValues[rowCValues.length-1]) {
+    eraseAudio.play();
     rowCValues[rowCValues.length-1] = false;
   }
   updateSheet();
@@ -559,6 +624,7 @@ var targetLock = document.getElementById('LAD');
 targetLock.addEventListener('click', function() {
   toggleRowLock('D');
   if (!lockedD && rowDValues[rowDValues.length-1]) {
+    eraseAudio.play();
     rowDValues[rowDValues.length-1] = false;
   }
   updateSheet();
@@ -571,11 +637,44 @@ Array.from(penaltyCellElements).forEach(function(penaltyCellElem, index) {
 
 var resetButton = document.getElementById('RESETBUTTON');
 resetButton.addEventListener('click', function() {
-  console.log('WTF');
   showModal('resetModal');
 });
 
 /* Animation Logic */
+var modalVisible = false;
+
+document.getElementById('resetModal').addEventListener('animationend', function() {
+  document.getElementById('resetModal').classList.remove('animate__animated', 'animate__fadeOutDown', 'animate__fadeInUp', 'animate__faster');
+  if(!modalVisible) {
+    document.getElementById('resetModal').style.visibility = 'hidden';
+  }
+});
+
+function showModal(modalId) {
+  document.getElementById(modalId).style.visibility = 'visible';
+  document.getElementById(modalId).classList.add('animate__animated', 'animate__fadeInUp', 'animate__faster');
+  modalVisible = true;
+}
+
+function hideModal(modalId) {
+  document.getElementById(modalId).classList.add('animate__animated', 'animate__fadeOutDown', 'animate__faster');
+  modalVisible = false;
+}
+
+function fadeModalContent(modalId) {
+  document.getElementById(modalId).getElementsByClassName('modal-contents')[0].classList.add('animate__animated', 'animate__fadeOutDown', 'animate__faster');
+  setTimeout(function() {
+    document.getElementById(modalId).getElementsByClassName('modal-contents')[0].classList.remove('animate__animated', 'animate__fadeOutDown', 'animate__faster');
+  }, 1200);
+}
+
+document.getElementById('LOCKCOPY').addEventListener('animationend', function() {
+  document.getElementById('LOCKCOPY').classList.remove('animate__animated', 'animate__headShake');
+});
+
+function shakeLockCopy() {
+  document.getElementById('LOCKCOPY').classList.add('animate__animated', 'animate__headShake');
+}
 
 var titleElem = document.getElementById('TITLE');
 setInterval(function () {
@@ -585,13 +684,14 @@ setInterval(function () {
   }, 2000);
 }, 20000);
 
-var totalElem = document.getElementById('CTOTAL');
-setInterval(function () {
-  totalElem.classList.add('animate__animated', 'animate__pulse', 'animate__faster', 'animate__repeat-3');
+function jiggleScore(elemId) {
+  var totalElem = document.getElementById(elemId);
+  totalElem.classList.remove('animate__animated', 'animate__rubberBand', 'animate__faster');
+  totalElem.classList.add('animate__animated', 'animate__rubberBand', 'animate__faster');
   setTimeout(function() {
-    totalElem.classList.remove('animate__animated', 'animate__pulse', 'animate__faster', 'animate__repeat-3');
-  }, 2000);
-}, 12000);
+    totalElem.classList.remove('animate__animated', 'animate__rubberBand', 'animate__faster');
+  }, 500);
+}
 
 var arrows = document.getElementsByClassName('ROWARROW');
 Array.from(arrows).forEach(function(arrow, index) {
@@ -603,5 +703,22 @@ Array.from(arrows).forEach(function(arrow, index) {
   }, 7000);
 });
 
+var launchTitleElem = document.getElementById('launchTitle');
+setInterval(function () {
+  launchTitleElem.classList.add('animate__animated', 'animate__tada');
+  setTimeout(function() {
+    launchTitleElem.classList.remove('animate__animated', 'animate__tada');
+  }, 2000);
+}, 5000);
+
 /* Process visuals for loaded data before starting */
 updateSheet();
+
+/* Launch in fullscreen mode */
+function launchGame() {
+  document.documentElement.requestFullscreen();
+  document.getElementById('launchModal').classList.add('animate__animated', 'animate__fadeOut', 'animate__faster');
+  setTimeout(function() {
+    document.getElementById('launchModal').style.display = 'none';
+  }, 500);
+};

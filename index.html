@@ -3,6 +3,7 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="apple-mobile-web-app-capable" content="yes">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Quixx Score Card</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -29,13 +30,13 @@
             1063.4,393.2 1214.6,393.2   "/>
         </g>
         <g id="LOCKCONNECTORS">
-          <path id="LOCKCONNECTORD1" class="LOCKCONNECTOR" d="M844.4,422.9h37.1c-14.4-4.5-25-19.7-25-37.7c0-17,9.4-31.4,22.5-36.8h-34.7
+          <path id="LOCKCONNECTORD" class="LOCKCONNECTOR" d="M844.4,422.9h37.1c-14.4-4.5-25-19.7-25-37.7c0-17,9.4-31.4,22.5-36.8h-34.7
             c4.7,0,8.6,4.4,8.6,9.9V413C853,418.4,849.1,422.9,844.4,422.9z"/>
-          <path id="LOCKCONNECTORC1" class="LOCKCONNECTOR" d="M844.4,336.3h37.1c-14.4-4.5-25-19.7-25-37.7c0-17,9.4-31.4,22.5-36.8h-34.7
+          <path id="LOCKCONNECTORC" class="LOCKCONNECTOR" d="M844.4,336.3h37.1c-14.4-4.5-25-19.7-25-37.7c0-17,9.4-31.4,22.5-36.8h-34.7
             c4.7,0,8.6,4.4,8.6,9.9v54.7C853,331.9,849.1,336.3,844.4,336.3z"/>
-          <path id="LOCKCONNECTORB1" class="LOCKCONNECTOR" d="M844.4,250.6h37.1c-14.4-4.5-25-19.7-25-37.7c0-17,9.4-31.4,22.5-36.8h-34.7
+          <path id="LOCKCONNECTORB" class="LOCKCONNECTOR" d="M844.4,250.6h37.1c-14.4-4.5-25-19.7-25-37.7c0-17,9.4-31.4,22.5-36.8h-34.7
             c4.7,0,8.6,4.4,8.6,9.9v54.7C853,246.2,849.1,250.6,844.4,250.6z"/>
-          <path id="LOCKCONNECTORA1" class="LOCKCONNECTOR" d="M844.4,163.6h37.1c-14.4-4.5-25-19.7-25-37.7c0-17,9.4-31.4,22.5-36.8h-34.7
+          <path id="LOCKCONNECTORA" class="LOCKCONNECTOR" d="M844.4,163.6h37.1c-14.4-4.5-25-19.7-25-37.7c0-17,9.4-31.4,22.5-36.8h-34.7
             c4.7,0,8.6,4.4,8.6,9.9v54.7C853,159.2,849.1,163.6,844.4,163.6z"/>
         </g>
         <g id="OVERLAYS">
@@ -1476,12 +1477,12 @@
             C766.5,445.4,766.4,445.3,766.2,445.3z"/>
         </g>
         <g id="TEXT">
-          <text id="SCORETEXTTOTAL" transform="matrix(1 0 0 1 1130.46 571.4625)" class="TEXT LARGETEXT" text-anchor="middle">0</text>
-          <text id="SCORETEXTP" transform="matrix(1 0 0 1 1131.5801 457.5427)" class="TEXT SMALLTEXT" text-anchor="middle">0</text>
-          <text id="SCORETEXTD" transform="matrix(1 0 0 1 1131.5801 370.5427)" class="TEXT SMALLTEXT" text-anchor="middle">0</text>
-          <text id="SCORETEXTC" transform="matrix(1 0 0 1 1131.5801 285.0427)" class="TEXT SMALLTEXT" text-anchor="middle">0</text>
-          <text id="SCORETEXTB" transform="matrix(1 0 0 1 1131.5801 199.2227)" class="TEXT SMALLTEXT" text-anchor="middle">0</text>
-          <text id="SCORETEXTA" transform="matrix(1 0 0 1 1131.5801 112.2227)" class="TEXT SMALLTEXT" text-anchor="middle">0</text>
+          <text id="SCORETEXTTOTAL" x="1130.46" y="571.4625" class="TEXT LARGETEXT" text-anchor="middle">0</text>
+          <text id="SCORETEXTP" x="1131.5801" y="457.5427" class="TEXT SMALLTEXT" text-anchor="middle">0</text>
+          <text id="SCORETEXTD" x="1131.5801" y="370.5427" class="TEXT SMALLTEXT" text-anchor="middle">0</text>
+          <text id="SCORETEXTC" x="1131.5801" y="285.0427" class="TEXT SMALLTEXT" text-anchor="middle">0</text>
+          <text id="SCORETEXTB" x="1131.5801" y="199.2227" class="TEXT SMALLTEXT" text-anchor="middle">0</text>
+          <text id="SCORETEXTA" x="1131.5801" y="112.2227" class="TEXT SMALLTEXT" text-anchor="middle">0</text>
           <text id="XTEXTP" transform="matrix(1 0 0 1 974.8301 490.1507)" class="TEXT SMALLTEXT" text-anchor="middle">0</text>
           <text id="XTEXTD" transform="matrix(1 0 0 1 974.8301 407.9007)" class="TEXT SMALLTEXT" text-anchor="middle">0</text>
           <text id="XTEXTC" transform="matrix(1 0 0 1 974.8301 321.9007)" class="TEXT SMALLTEXT" text-anchor="middle">0</text>
@@ -1505,14 +1506,58 @@
         </g>
       </svg>
     </div>
-    <div id="resetModal">
+    <div id="resetModal" class="modal">
       <div class="modal-contents">
         Are you sure you want to reset your score sheet?
         <br>
-        <button onclick="resetSheet()">Yes</button>
-        <button onclick="hideModal('resetModal')">No</button>
+        <button class="reset" onclick="resetSheet()">Reset</button>
+        <button onclick="hideModal('resetModal')">Cancel</button>
       </div>
     </div>
+    <!--
+    <div id="instructionsModal" class="modal">
+      <div class="modal-contents">
+        <h1>OBJECT</h1>
+        Score the most points by crossing out as many numbers in the four color-rows as possible while avoiding penalty points.
+        <h1>SETUP</h1>
+        Each player will need a mobile device or computer screen for their own digital score sheet. Before playing it’s important to understand the one basic rule of Qwixx, which is that numbers must be crossed out from left to right in each of the four color-rows. You do not have to begin with the number farthest to the left, but if you skip any numbers, they cannot be crossed out afterward.
+
+      </div>
+    </div>
+  -->
+    <div id="launchModal" class="modal">
+      <div class="modal-contents">
+        <svg id="launchTitle" version="1.1" x="0px" y="0px" viewBox="0 0 226 70">
+          <path id="LAUNCHQ" d="M53.9,32.7c0,4-0.7,7.8-2.2,11.5c-1.5,3.8-3.7,7-6.6,9.6c3.9,5.6,5.9,8.6,5.9,9.2
+            c0,1.2-0.6,1.9-1.8,1.9L34,65.6c-1.1,0-2.8-2-5.3-6.2c-7.6-0.3-13.5-3-17.8-8.1c-4.1-4.8-6.1-11.1-6.1-18.9c0-7.9,2.3-14.6,7-19.9
+            C16.7,6.9,23,4.2,30.9,4.2c7,0,12.7,3.1,17.1,9.3C51.9,19,53.9,25.4,53.9,32.7z M37.9,33.1c0-2.6-0.7-5-2.1-7.2
+            c-1.6-2.4-3.7-3.6-6.2-3.6c-2.5,0-4.6,1.2-6.1,3.6c-1.4,2.1-2.1,4.5-2.1,7.2c0,2.6,0.7,5,2.1,7.2c1.6,2.4,3.6,3.6,6.1,3.6
+            c2.5,0,4.6-1.2,6.2-3.6C37.2,38.1,37.9,35.7,37.9,33.1z"/>
+          <path id="LAUNCHW" d="M111.2,8l-3.8,47.8c-0.1,1.1-0.7,1.6-1.8,1.7l-14.1,0.6c-1,0-1.6-0.4-1.9-1.2L83.3,39l-6,17.7
+            c-0.3,0.9-0.9,1.4-1.8,1.3l-13.5-0.6c-1.1,0-1.7-0.6-1.8-1.6L55.5,7.7c0-1.3,0.6-2,1.9-2h11.5c1.2,0,1.9,0.6,2,1.8l1.6,23.2
+            l4.1-18.4c0.2-1,0.9-1.5,1.9-1.5h9.6c1.1,0,1.7,0.5,1.9,1.5L94,30.7l1.8-23.5c0.1-1.3,0.8-1.8,2.1-1.8l11.6,0.6
+            c1.2,0,1.8,0.6,1.8,1.7V8z"/>
+          <path id="LAUNCHI" d="M130.6,7.9l-1,47.4c0,1.2-0.6,1.8-1.8,1.8L116,57.4c-0.5,0-0.9-0.2-1.3-0.6
+            c-0.3-0.4-0.5-0.8-0.5-1.3l0.6-47.9c0-1.3,0.6-2,1.8-2l12.2,0.2C130,5.9,130.6,6.6,130.6,7.9z"/>
+          <path id="LAUNCHX1" d="M176.3,8.3c0,0.3-0.1,0.6-0.3,1l-12.4,21.8L176,53.4c0.1,0.3,0.2,0.6,0.2,0.9
+            c0,1.2-0.6,1.9-1.8,1.9l-12.6,0.5c-0.8,0-1.4-0.3-1.8-1l-5.2-9.2l-5.1,9.2c-0.4,0.7-1,1-1.8,1l-12.6-0.5c-1.2,0-1.8-0.7-1.8-1.9
+            c0-0.2,0.1-0.5,0.3-0.9l12.4-22.3L133.9,9.2c-0.2-0.4-0.3-0.7-0.3-1c0-1.3,0.6-1.9,1.9-1.9h13.2c0.8,0,1.4,0.3,1.7,1l4.4,8.1
+            l4.5-8.1c0.4-0.7,0.9-1,1.6-1h13.3C175.7,6.4,176.3,7,176.3,8.3z"/>
+          <path id="LAUNCHX2" d="M220.9,8.3c0,0.3-0.1,0.6-0.3,1l-12.4,21.8l12.4,22.3c0.1,0.3,0.2,0.6,0.2,0.9
+            c0,1.2-0.6,1.9-1.8,1.9l-12.6,0.5c-0.8,0-1.4-0.3-1.8-1l-5.2-9.2l-5.1,9.2c-0.4,0.7-1,1-1.8,1l-12.6-0.5c-1.2,0-1.8-0.7-1.8-1.9
+            c0-0.2,0.1-0.5,0.3-0.9l12.4-22.3L178.5,9.2c-0.2-0.4-0.3-0.7-0.3-1c0-1.3,0.6-1.9,1.9-1.9h13.2c0.8,0,1.4,0.3,1.7,1l4.4,8.1
+            l4.5-8.1c0.4-0.7,0.9-1,1.6-1H219C220.3,6.4,220.9,7,220.9,8.3z"/>
+        </svg>
+        <button onclick="launchGame()">Play</button>
+      </div>
+    </div>
+    <div class="rotate-device-container">
+      <div class="device"></div>
+      <div class="rotate-device-copy">
+        please rotate your device
+      </div>
+    </div>
+    <script src="js/confetti.js"></script>
     <script src="js/quixx.js"></script>
   </body>
 </html>

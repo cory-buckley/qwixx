@@ -1,10 +1,57 @@
 body {
 	margin: 0;
 	padding: 0;
-	width: 100vw;
-	height: 100vh;
-	position:fixed;
+	width: 100%;
+	height: 100%;
+	position: fixed;
 	user-select: none;
+}
+
+.device {
+  height: 20vh;
+  width: 20vw;
+  border: 3px solid #737373;
+  border-radius: 10px;
+  animation: rotate 1.5s ease-in-out infinite alternate;
+  filter: drop-shadow(1px 1px 0 #ffffff);
+}
+
+.rotate-device-container {
+	position: fixed;
+	width: 100%;
+	height: 100%;
+	display: flex;
+	justify-content: center;
+  	align-items: center;
+  	flex-direction: column;
+  	background: linear-gradient(to bottom,  #FCFCFC 10%,#EFEFEF 90%);
+  	background-color: black;
+}
+
+@media (orientation: landscape) {
+	.rotate-device-container {
+		display: none;
+	}
+}
+
+.rotate-device-copy {
+	margin-top: 3vh;
+	font-size: 4.5vw;
+	font-family: Helvetica, sans-serif;
+	color: #737373;
+	filter: drop-shadow(1px 1px 0 #ffffff);
+}
+
+@keyframes rotate {
+  0% {
+		transform: rotate(0deg)
+	}
+	50% {
+		transform: rotate(-90deg)
+	}
+	100% {
+		transform: rotate(-90deg)
+	}
 }
 
 .quixx-sheet-container {
@@ -19,28 +66,69 @@ body {
 	background: linear-gradient(to bottom,  #FCFCFC 10%,#EFEFEF 90%);
 }
 
+#launchModal {
+	position: fixed;
+	display: flex;
+	justify-content: center;
+  	align-items: center;
+  	flex-direction: column;
+	width: 100%;
+	height: 100%;
+	color: #FFFFFF;
+	background: rgba(0, 0, 0, 0.75);
+	backdrop-filter: blur(10px);
+	-webkit-backdrop-filter: blur(10px);
+}
+
+#launchModal svg {
+	width: 40%;
+	display: block;
+	margin: auto;
+	margin-bottom: 5vh;
+}
+
 #resetModal {
 	position: fixed;
 	display: flex;
+	justify-content: center;
+  	align-items: center;
   	flex-direction: column;
- 	justify-content: center;
-	width: 100vw;
-	height: 100vh;
+	width: 100%;
+	height: 100%;
 	color: #FFFFFF;
-	background: grey;
 	visibility: hidden;
+	background: rgba(0, 0, 0, 0.75);
+	backdrop-filter: blur(10px);
+	-webkit-backdrop-filter: blur(10px);
 }
 
 .modal-contents {
+	width: 100%;
 	text-align: center;
 	font-family: Helvetica, sans-serif;
-	font-size: 20pt;
 }
 
 button {
-	margin-top:  10vh;
-	width: 10vw;
-	height: 5vw;
+	width: 14vw;
+	height: 7vw;
+	font-size: 2vw;
+	background-color: #737373;
+	color: white;
+	border: 0;
+	border-radius: 5px;
+}
+
+#resetModal button {
+	margin-top: 12vh;
+}
+
+#resetModal .modal-contents {
+	font-size: 3vw;
+}
+
+#resetModal .reset {
+	background-color: #d9534f;
+	margin-right: 6vw;
 }
 
 /* SVG Styles */
@@ -62,7 +150,7 @@ button {
 	fill: #FFFFFF;
 }
 
-#TITLE, #CTOTAL, #SCORETEXTTOTAL {
+#TITLE, #CTOTAL, #SCORETEXTTOTAL, #SCORETEXTA, #SCORETEXTB, #SCORETEXTC, #SCORETEXTD, #SCORETEXTP {
 	transform-origin: center;
 	transform-box: fill-box;
 }
@@ -95,9 +183,8 @@ button {
 
 .LOCKAREA { fill: transparent; }
 .LOCKCONNECTOR {
-	opacity: 0.35; 
-	fill: #FFFFFF;
-	mix-blend-mode: screen;
+	opacity: 0.8; 
+	mix-blend-mode: multiply;
 }
 
 .TEXT { font-family: 'Waiting for the Sunrise', cursive; }
@@ -106,10 +193,6 @@ button {
 
 .NUMBERA, .NUMBERB, .NUMBERC, .NUMBERD, .CROSS, .CALOCK1, .CALOCK2, .CBLOCK1, .CBLOCK2, .CCLOCK1, .CCLOCK2, .CDLOCK1, .CDLOCK2, .LOCKCONNECTOR, .ROWARROW, .ICON {
 	pointer-events: none;
-}
-
-.CROSS {
-	fill: #272727;
 }
 
 :root {
