@@ -77,7 +77,6 @@ body {
 	color: #FFFFFF;
 	background: rgba(0, 0, 0, 0.75);
 	backdrop-filter: blur(10px);
-	-webkit-backdrop-filter: blur(10px);
 }
 
 #launchModal svg {
@@ -99,7 +98,6 @@ body {
 	visibility: hidden;
 	background: rgba(0, 0, 0, 0.75);
 	backdrop-filter: blur(10px);
-	-webkit-backdrop-filter: blur(10px);
 }
 
 .modal-contents {

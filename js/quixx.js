@@ -52,7 +52,6 @@ var lockedA = JSON.parse(localStorage.getItem('lockedA')) || false,
   lockedD = JSON.parse(localStorage.getItem('lockedD')) || false;
 
 var ouchAudio = new Audio('audio/ouch.mp3');
-var crossAudio = new Audio('audio/cross.wav');
 var eraseAudio = new Audio('audio/erase.wav');
 var rejectAudio = new Audio('audio/reject.wav');
 var wipeAudio = new Audio('audio/wipe.wav');
@@ -61,19 +60,53 @@ ouchAudio.playbackRate = 1.75;
 
 function resetAudio() {
   ouchAudio.pause();
-  crossAudio.pause();
   eraseAudio.pause();
   lockAudio.pause();
   rejectAudio.pause();
   wipeAudio.pause();
   ouchAudio.currentTime = 0;
-  crossAudio.currentTime = 0;
   eraseAudio.currentTime = 0;
   lockAudio.currentTime = 0;
   rejectAudio.currentTime = 0;
   wipeAudio.currentTime = 0;
 }
 
+// pitch bend web audio api function for cross sounds so they are less annoying
+var audioCtx;
+var source;
+var request;
+
+function getData(url) {
+  source = audioCtx.createBufferSource();
+  request = new XMLHttpRequest();
+
+  request.open('GET', url, true);
+
+  request.responseType = 'arraybuffer';
+
+  request.onload = function() {
+    var audioData = request.response;
+
+    audioCtx.decodeAudioData(audioData, function(buffer) {
+        myBuffer = buffer;
+        source.buffer = myBuffer;
+        source.connect(audioCtx.destination);
+        source.loop = false;
+      },
+
+      function(e){"Error with decoding audio data" + e.err});
+  }
+
+  request.send();
+}
+
+function playSample(sample, rate) {
+  getData(sample);
+  source.playbackRate.value = rate
+  source.start(0);
+}
+
+// refresh the score sheet and data
 function resetSheet() {
   fadeModalContent('resetModal');
   resetAudio();
@@ -219,7 +252,7 @@ function crossCellPlayAudio(rowValues, num) {
       }, 1000);
     }
     else {
-      crossAudio.play();
+      playSample('audio/cross.wav', 1 + ((Math.random()) * 0.25));
     }
   }
   else {
@@ -306,7 +339,7 @@ function updateTextElements() {
   var rowDTotal = updateRowText(rowDValues, 'D');
 
   // update penalty text
-  penaltyCount = rowPValues.filter(function(value) {
+  var penaltyCount = rowPValues.filter(function(value) {
     return value;
   });
   if (penaltyCount.length) {
@@ -716,7 +749,10 @@ updateSheet();
 
 /* Launch in fullscreen mode */
 function launchGame() {
-  document.documentElement.requestFullscreen();
+  audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  if (document.documentElement.requestFullscreen) {
+    document.documentElement.requestFullscreen();
+  }
   document.getElementById('launchModal').classList.add('animate__animated', 'animate__fadeOut', 'animate__faster');
   setTimeout(function() {
     document.getElementById('launchModal').style.display = 'none';
