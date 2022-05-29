@@ -673,6 +673,11 @@ resetButton.addEventListener('click', function() {
   showModal('resetModal');
 });
 
+var instructionsButton = document.getElementById('HELPBUTTON');
+instructionsButton.addEventListener('click', function() {
+  showModal('launchModal');
+});
+
 /* Animation Logic */
 var modalVisible = false;
 
@@ -755,6 +760,7 @@ function launchGame() {
   }
   document.getElementById('launchModal').classList.add('animate__animated', 'animate__fadeOut', 'animate__faster');
   setTimeout(function() {
-    document.getElementById('launchModal').style.display = 'none';
+    document.getElementById('launchModal').style.visibility = 'hidden';
+    document.getElementById('launchModal').classList.remove('animate__animated', 'animate__fadeOut', 'animate__fadeInUp','animate__faster');
   }, 500);
 };

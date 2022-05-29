@@ -66,19 +66,6 @@ body {
 	background: linear-gradient(to bottom,  #FCFCFC 10%,#EFEFEF 90%);
 }
 
-#launchModal {
-	position: fixed;
-	display: flex;
-	justify-content: center;
-  	align-items: center;
-  	flex-direction: column;
-	width: 100%;
-	height: 100%;
-	color: #FFFFFF;
-	background: rgba(0, 0, 0, 0.75);
-	backdrop-filter: blur(10px);
-}
-
 #launchModal svg {
 	width: 40%;
 	display: block;
@@ -86,18 +73,21 @@ body {
 	margin-bottom: 5vh;
 }
 
-#resetModal {
+.modal {
 	position: fixed;
 	display: flex;
 	justify-content: center;
-  	align-items: center;
-  	flex-direction: column;
+  align-items: center;
+  flex-direction: column;
 	width: 100%;
 	height: 100%;
 	color: #FFFFFF;
-	visibility: hidden;
 	background: rgba(0, 0, 0, 0.75);
 	backdrop-filter: blur(10px);
+}
+
+#resetModal {
+	visibility: hidden;
 }
 
 .modal-contents {
@@ -106,8 +96,18 @@ body {
 	font-family: Helvetica, sans-serif;
 }
 
-button {
-	width: 14vw;
+.tutorial-button, .instructions-button {
+	-webkit-appearance: button;
+  -moz-appearance: button;
+  appearance: button;
+  text-decoration: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+button, .tutorial-button, .instructions-button {
+	width: 16vw;
 	height: 7vw;
 	font-size: 2vw;
 	background-color: #737373;
@@ -118,6 +118,16 @@ button {
 
 #resetModal button {
 	margin-top: 12vh;
+}
+
+.launch-modal-buttons {
+	margin: auto;
+	margin-top: 12vh;
+	display: flex;
+	justify-content: space-between;
+  align-items: center;
+  flex-direction: row;
+  width: 55vw;
 }
 
 #resetModal .modal-contents {
